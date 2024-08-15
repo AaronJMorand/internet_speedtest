@@ -1,0 +1,875 @@
+{
+    "Metadata": {
+        "TemplateId": "arn:aws:cloudformation:ca-central-1:568125114079:generatedTemplate/b065bd45-c256-4c46-9e33-491526be5ed8"
+    },
+    "Parameters": {
+        "LambdaFunction00speedtestupload00pRAIfCodeImageUri9CYVO": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "URI of a [container image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html) in the Amazon ECR registry."
+        },
+        "LambdaFunction00speedtestdownload00qSzdCCodeSourceKMSKeyArniikIH": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "Value of write only property Code/SourceKMSKeyArn of resource LambdaFunction00speedtestdownload00qSzdC."
+        },
+        "LambdaFunction00speedtestdownload00qSzdCCodeImageUripbWdY": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "URI of a [container image](https://docs.aws.amazon.com/lambda/latest/dg/lambda-images.html) in the Amazon ECR registry."
+        },
+        "LambdaFunction00speedtestdownload00qSzdCCodeZipFileR8JgO": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "(Node.js and Python) The source code of your Lambda function. If you include your function source inline with this parameter, CFN places it in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html). This zip file cannot exceed 4MB. For the ``Handler`` property, the first part of the handler identifier must be ``index``. For example, ``index.handler``.\n  For JSON, you must escape quotes and special characters such as newline (``\\n``) with a backslash.\n If you specify a function that interacts with an AWS CloudFormation custom resource, you don't have to write your own functions to send responses to the custom resource that invoked the function. AWS CloudFormation provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html)) that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html) for details."
+        },
+        "LambdaFunction00speedtestdownload00qSzdCCodeS3ObjectVersion7LHLF": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "For versioned objects, the version of the deployment package object to use."
+        },
+        "LambdaFunction00speedtestupload00pRAIfCodeS3KeyPaOqk": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "The Amazon S3 key of the deployment package."
+        },
+        "LambdaFunction00speedtestupload00pRAIfCodeS3BucketyiWEc": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "An Amazon S3 bucket in the same AWS-Region as your function. The bucket can be in a different AWS-account."
+        },
+        "LambdaFunction00speedtestupload00pRAIfCodeZipFilemPvI5": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "(Node.js and Python) The source code of your Lambda function. If you include your function source inline with this parameter, CFN places it in a file named ``index`` and zips it to create a [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-package.html). This zip file cannot exceed 4MB. For the ``Handler`` property, the first part of the handler identifier must be ``index``. For example, ``index.handler``.\n  For JSON, you must escape quotes and special characters such as newline (``\\n``) with a backslash.\n If you specify a function that interacts with an AWS CloudFormation custom resource, you don't have to write your own functions to send responses to the custom resource that invoked the function. AWS CloudFormation provides a response module ([cfn-response](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cfn-lambda-function-code-cfnresponsemodule.html)) that simplifies sending responses. See [Using Lambda with CloudFormation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudformation.html) for details."
+        },
+        "LambdaFunction00speedtestdownload00qSzdCCodeS3Bucket5llHs": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "An Amazon S3 bucket in the same AWS-Region as your function. The bucket can be in a different AWS-account."
+        },
+        "LambdaFunction00speedtestdownload00qSzdCCodeS3Key6uV7a": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "The Amazon S3 key of the deployment package."
+        },
+        "LambdaFunction00speedtestupload00pRAIfCodeS3ObjectVersionqTT2v": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "For versioned objects, the version of the deployment package object to use."
+        },
+        "LambdaFunction00speedtestupload00pRAIfCodeSourceKMSKeyArncvhL1": {
+            "NoEcho": "true",
+            "Type": "String",
+            "Description": "Value of write only property Code/SourceKMSKeyArn of resource LambdaFunction00speedtestupload00pRAIf."
+        }
+    },
+    "Resources": {
+        "IAMRole00speedtestuploadrole2zwjuhjj00fyFzF": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/service-role/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::568125114079:policy/service-role/AWSLambdaBasicExecutionRole-1c526f0a-26dd-4f81-ac2a-21b2ce789dd3"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "speedtest_upload-role-2zwjuhjj",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "CloudFrontOriginRequestPolicy0059781a5b390341f3afcbaf62929ccde100A6ntM": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "none"
+                    },
+                    "Comment": "Policy for custom origin with CORS",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "whitelist",
+                        "Headers": [
+                            "origin"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "none"
+                    },
+                    "Name": "Managed-CORS-CustomOrigin"
+                }
+            }
+        },
+        "LambdaPermission00functionspeedtestdownload006zaC2": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestdownload00qSzdC",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/PUT/speedtest_download",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "ApiGatewayStage00Production00TM2Tl": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGateway::Stage",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "DeploymentId": {
+                    "Fn::GetAtt": [
+                        "ApiGatewayDeployment0009ll3t00jgL4T",
+                        "DeploymentId"
+                    ]
+                },
+                "StageName": "Production",
+                "TracingEnabled": false,
+                "RestApiId": {
+                    "Ref": "ApiGatewayRestApi00f38g3qzrwj00bcKEQ"
+                },
+                "MethodSettings": [
+                    {
+                        "CacheTtlInSeconds": 300,
+                        "LoggingLevel": "ERROR",
+                        "ResourcePath": "/*",
+                        "CacheDataEncrypted": false,
+                        "DataTraceEnabled": false,
+                        "ThrottlingBurstLimit": 5000,
+                        "CachingEnabled": false,
+                        "MetricsEnabled": false,
+                        "HttpMethod": "*",
+                        "ThrottlingRateLimit": 10000
+                    }
+                ],
+                "AccessLogSetting": {
+                    "DestinationArn": "arn:aws:logs:ca-central-1:568125114079:log-group:API-Gateway-Execution-Logs_f38g3qzrwj/Production",
+                    "Format": "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime]\"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId $context.extendedRequestId"
+                },
+                "CacheClusterSize": "0.5",
+                "CacheClusterEnabled": false
+            }
+        },
+        "CloudFrontOriginRequestPolicy0088a5eaf42fd44709b370b4c650ea3fcf00cH38Q": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::OriginRequestPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "OriginRequestPolicyConfig": {
+                    "QueryStringsConfig": {
+                        "QueryStringBehavior": "none"
+                    },
+                    "Comment": "Policy for S3 origin with CORS",
+                    "HeadersConfig": {
+                        "HeaderBehavior": "whitelist",
+                        "Headers": [
+                            "origin",
+                            "access-control-request-headers",
+                            "access-control-request-method"
+                        ]
+                    },
+                    "CookiesConfig": {
+                        "CookieBehavior": "none"
+                    },
+                    "Name": "Managed-CORS-S3Origin"
+                }
+            }
+        },
+        "S3BucketPolicy00pixelgladiatorcom00HuRsk": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::S3::BucketPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Bucket": {
+                    "Ref": "S3Bucket00pixelgladiatorcom00TOJ6O"
+                },
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Resource": "arn:aws:s3:::pixelgladiator.com/*",
+                            "Action": "s3:GetObject",
+                            "Effect": "Allow",
+                            "Principal": "*",
+                            "Sid": "PublicReadGetObject"
+                        }
+                    ]
+                }
+            }
+        },
+        "ApiGatewayV2Deployment00hqvni700dC9Vm": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGatewayV2::Deployment",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ApiId": {
+                    "Ref": "ApiGatewayV2Api00j0oiyjzoy800Vm24i"
+                },
+                "Description": "This first deployment was created by the console during API creation."
+            }
+        },
+        "ApiGatewayV2DomainName00apipixelgladiatorcom00fYzS9": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGatewayV2::DomainName",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "DomainName": "api.pixelgladiator.com",
+                "DomainNameConfigurations": [
+                    {
+                        "EndpointType": "EDGE",
+                        "SecurityPolicy": "TLS_1_2",
+                        "CertificateArn": "arn:aws:acm:us-east-1:568125114079:certificate/50942abd-3f64-4e95-9409-6ea1cd538a90"
+                    }
+                ],
+                "Tags": {}
+            }
+        },
+        "LambdaFunction00speedtestdownload00qSzdC": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "MemorySize": 2048,
+                "Description": "",
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                },
+                "Timeout": 3,
+                "RuntimeManagementConfig": {
+                    "UpdateRuntimeOn": "Auto"
+                },
+                "Handler": "index.handler",
+                "Code": {
+                    "SourceKMSKeyArn": {
+                        "Ref": "LambdaFunction00speedtestdownload00qSzdCCodeSourceKMSKeyArniikIH"
+                    },
+                    "S3ObjectVersion": {
+                        "Ref": "LambdaFunction00speedtestdownload00qSzdCCodeS3ObjectVersion7LHLF"
+                    },
+                    "S3Bucket": {
+                        "Ref": "LambdaFunction00speedtestdownload00qSzdCCodeS3Bucket5llHs"
+                    },
+                    "ZipFile": {
+                        "Ref": "LambdaFunction00speedtestdownload00qSzdCCodeZipFileR8JgO"
+                    },
+                    "ImageUri": {
+                        "Ref": "LambdaFunction00speedtestdownload00qSzdCCodeImageUripbWdY"
+                    },
+                    "S3Key": {
+                        "Ref": "LambdaFunction00speedtestdownload00qSzdCCodeS3Key6uV7a"
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "IAMRole00speedtestdownloadrolenhy6ua3n00rMVx3",
+                        "Arn"
+                    ]
+                },
+                "FileSystemConfigs": [],
+                "FunctionName": "speedtest_download",
+                "Runtime": "nodejs20.x",
+                "PackageType": "Zip",
+                "LoggingConfig": {
+                    "LogFormat": "Text",
+                    "LogGroup": "/aws/lambda/speedtest_download"
+                },
+                "Environment": {
+                    "Variables": {
+                        "size_min": "1000",
+                        "size_max": "1000000",
+                        "size_default": "10000"
+                    }
+                },
+                "EphemeralStorage": {
+                    "Size": 512
+                },
+                "Architectures": [
+                    "x86_64"
+                ]
+            }
+        },
+        "CloudFrontCachePolicy00658327eaf89d4faba63d7e88639e58f600oGzIP": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::CachePolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "CachePolicyConfig": {
+                    "Comment": "Policy with caching enabled. Supports Gzip and Brotli compression.",
+                    "MinTTL": 1,
+                    "MaxTTL": 31536000,
+                    "ParametersInCacheKeyAndForwardedToOrigin": {
+                        "QueryStringsConfig": {
+                            "QueryStringBehavior": "none"
+                        },
+                        "EnableAcceptEncodingBrotli": true,
+                        "HeadersConfig": {
+                            "HeaderBehavior": "none"
+                        },
+                        "CookiesConfig": {
+                            "CookieBehavior": "none"
+                        },
+                        "EnableAcceptEncodingGzip": true
+                    },
+                    "DefaultTTL": 86400,
+                    "Name": "Managed-CachingOptimized"
+                }
+            }
+        },
+        "LambdaPermission00functionspeedtestdownload003FyuP": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestdownload00qSzdC",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:apigateway:ca-central-1::/restapis/f38g3qzrwj",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "CloudFrontDistribution00E3OVUN5G0UMWQC007oFck": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::CloudFront::Distribution",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "DistributionConfig": {
+                    "Logging": {
+                        "IncludeCookies": false,
+                        "Bucket": "",
+                        "Prefix": ""
+                    },
+                    "Comment": "",
+                    "DefaultRootObject": "",
+                    "Origins": [
+                        {
+                            "ConnectionTimeout": 10,
+                            "OriginAccessControlId": "",
+                            "ConnectionAttempts": 3,
+                            "OriginCustomHeaders": [
+                                {
+                                    "HeaderName": "Cross-Origin-Opener-Policy",
+                                    "HeaderValue": "same-origin"
+                                },
+                                {
+                                    "HeaderName": "Access-Control-Allow-Origin",
+                                    "HeaderValue": "origin"
+                                },
+                                {
+                                    "HeaderName": "Cross-Origin-Embedder-Policy",
+                                    "HeaderValue": "require-corp"
+                                }
+                            ],
+                            "DomainName": "pixelgladiator.com.s3-website.ca-central-1.amazonaws.com",
+                            "OriginShield": {
+                                "Enabled": false
+                            },
+                            "OriginPath": "",
+                            "Id": "pixelgladiator.com.s3-website.ca-central-1.amazonaws.com",
+                            "CustomOriginConfig": {
+                                "OriginKeepaliveTimeout": 5,
+                                "OriginReadTimeout": 30,
+                                "OriginSSLProtocols": [
+                                    "SSLv3",
+                                    "TLSv1",
+                                    "TLSv1.1",
+                                    "TLSv1.2"
+                                ],
+                                "HTTPSPort": 443,
+                                "HTTPPort": 80,
+                                "OriginProtocolPolicy": "http-only"
+                            }
+                        }
+                    ],
+                    "ViewerCertificate": {
+                        "MinimumProtocolVersion": "TLSv1.2_2021",
+                        "SslSupportMethod": "sni-only",
+                        "CloudFrontDefaultCertificate": false,
+                        "AcmCertificateArn": "arn:aws:acm:us-east-1:568125114079:certificate/50942abd-3f64-4e95-9409-6ea1cd538a90"
+                    },
+                    "PriceClass": "PriceClass_All",
+                    "DefaultCacheBehavior": {
+                        "Compress": true,
+                        "FunctionAssociations": [],
+                        "LambdaFunctionAssociations": [],
+                        "TargetOriginId": "pixelgladiator.com.s3-website.ca-central-1.amazonaws.com",
+                        "ViewerProtocolPolicy": "redirect-to-https",
+                        "ResponseHeadersPolicyId": "b620dff4-6ebe-4605-802f-b76bf6665d87",
+                        "TrustedSigners": [],
+                        "FieldLevelEncryptionId": "",
+                        "TrustedKeyGroups": [],
+                        "AllowedMethods": [
+                            "HEAD",
+                            "DELETE",
+                            "POST",
+                            "GET",
+                            "OPTIONS",
+                            "PUT",
+                            "PATCH"
+                        ],
+                        "CachedMethods": [
+                            "HEAD",
+                            "GET",
+                            "OPTIONS"
+                        ],
+                        "SmoothStreaming": false,
+                        "OriginRequestPolicyId": {
+                            "Ref": "CloudFrontOriginRequestPolicy0088a5eaf42fd44709b370b4c650ea3fcf00cH38Q"
+                        },
+                        "CachePolicyId": {
+                            "Ref": "CloudFrontCachePolicy00658327eaf89d4faba63d7e88639e58f600oGzIP"
+                        }
+                    },
+                    "Staging": false,
+                    "CustomErrorResponses": [],
+                    "ContinuousDeploymentPolicyId": "",
+                    "OriginGroups": {
+                        "Quantity": 0,
+                        "Items": []
+                    },
+                    "Enabled": true,
+                    "Aliases": [
+                        "www.pixelgladiator.com",
+                        "pixelgladiator.com"
+                    ],
+                    "IPV6Enabled": true,
+                    "WebACLId": "",
+                    "HttpVersion": "http2",
+                    "Restrictions": {
+                        "GeoRestriction": {
+                            "Locations": [],
+                            "RestrictionType": "none"
+                        }
+                    },
+                    "CacheBehaviors": []
+                }
+            }
+        },
+        "LambdaFunction00speedtestupload00pRAIf": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Function",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "MemorySize": 2048,
+                "Description": "",
+                "TracingConfig": {
+                    "Mode": "PassThrough"
+                },
+                "Timeout": 2,
+                "RuntimeManagementConfig": {
+                    "UpdateRuntimeOn": "Auto"
+                },
+                "Handler": "index.handler",
+                "Code": {
+                    "SourceKMSKeyArn": {
+                        "Ref": "LambdaFunction00speedtestupload00pRAIfCodeSourceKMSKeyArncvhL1"
+                    },
+                    "S3ObjectVersion": {
+                        "Ref": "LambdaFunction00speedtestupload00pRAIfCodeS3ObjectVersionqTT2v"
+                    },
+                    "S3Bucket": {
+                        "Ref": "LambdaFunction00speedtestupload00pRAIfCodeS3BucketyiWEc"
+                    },
+                    "ZipFile": {
+                        "Ref": "LambdaFunction00speedtestupload00pRAIfCodeZipFilemPvI5"
+                    },
+                    "ImageUri": {
+                        "Ref": "LambdaFunction00speedtestupload00pRAIfCodeImageUri9CYVO"
+                    },
+                    "S3Key": {
+                        "Ref": "LambdaFunction00speedtestupload00pRAIfCodeS3KeyPaOqk"
+                    }
+                },
+                "Role": {
+                    "Fn::GetAtt": [
+                        "IAMRole00speedtestuploadrole2zwjuhjj00fyFzF",
+                        "Arn"
+                    ]
+                },
+                "FileSystemConfigs": [],
+                "FunctionName": "speedtest_upload",
+                "Runtime": "nodejs20.x",
+                "PackageType": "Zip",
+                "LoggingConfig": {
+                    "LogFormat": "Text",
+                    "LogGroup": "/aws/lambda/speedtest_upload"
+                },
+                "Environment": {
+                    "Variables": {
+                        "size_min": "1000",
+                        "size_max": "1000000",
+                        "size_default": "10000"
+                    }
+                },
+                "EphemeralStorage": {
+                    "Size": 512
+                },
+                "Architectures": [
+                    "x86_64"
+                ]
+            }
+        },
+        "S3Bucket00wwwpixelgladiatorcom00f4A0O": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::S3::Bucket",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "WebsiteConfiguration": {
+                    "RedirectAllRequestsTo": {
+                        "HostName": "pixelgladiator.com"
+                    }
+                },
+                "PublicAccessBlockConfiguration": {
+                    "RestrictPublicBuckets": true,
+                    "IgnorePublicAcls": true,
+                    "BlockPublicPolicy": true,
+                    "BlockPublicAcls": true
+                },
+                "BucketName": "www.pixelgladiator.com",
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "BucketKeyEnabled": false,
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRole1c526f0a26dd4f81ac2a21b2ce789dd300Hs3Sg": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::ManagedPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ManagedPolicyName": "AWSLambdaBasicExecutionRole-1c526f0a-26dd-4f81-ac2a-21b2ce789dd3",
+                "Path": "/service-role/",
+                "Description": "",
+                "Groups": [],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Resource": "arn:aws:logs:ca-central-1:568125114079:*",
+                            "Action": "logs:CreateLogGroup",
+                            "Effect": "Allow"
+                        },
+                        {
+                            "Resource": [
+                                "arn:aws:logs:ca-central-1:568125114079:log-group:/aws/lambda/speedtest_upload:*"
+                            ],
+                            "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "IAMRole00speedtestuploadrole2zwjuhjj00fyFzF"
+                    }
+                ],
+                "Users": []
+            }
+        },
+        "LambdaPermission00functionspeedtestupload00hRabu": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestupload00pRAIf",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:ql6aczqvwi/*/*/speedtest_upload",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "LambdaPermission00functionspeedtestdownload002iB77": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestdownload00qSzdC",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/GET/speedtest_download",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "LambdaPermission00functionspeedtestupload00iqNcz": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestupload00pRAIf",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/OPTIONS/speedtest_upload",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "ApiGatewayV2ApiMapping00apipixelgladiatorcom00vpYAq": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGatewayV2::ApiMapping",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Stage": {
+                    "Ref": "ApiGatewayStage00Production00TM2Tl"
+                },
+                "ApiMappingKey": "",
+                "DomainName": {
+                    "Ref": "ApiGatewayV2DomainName00apipixelgladiatorcom00fYzS9"
+                },
+                "ApiId": {
+                    "Ref": "ApiGatewayRestApi00f38g3qzrwj00bcKEQ"
+                }
+            }
+        },
+        "IAMRole00speedtestdownloadrolenhy6ua3n00rMVx3": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::Role",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Path": "/service-role/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::568125114079:policy/service-role/AWSLambdaBasicExecutionRole-39ee0e14-0f1f-443e-9d28-928add00937b"
+                ],
+                "MaxSessionDuration": 3600,
+                "RoleName": "speedtest_download-role-nhy6ua3n",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Action": "sts:AssumeRole",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "ApiGatewayV2Api00j0oiyjzoy800Vm24i": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGatewayV2::Api",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "RouteSelectionExpression": "$request.body.action",
+                "DisableExecuteApiEndpoint": false,
+                "ProtocolType": "WEBSOCKET",
+                "Tags": {},
+                "Name": "WAPI Speed Test",
+                "ApiKeySelectionExpression": "$request.header.x-api-key"
+            }
+        },
+        "LambdaPermission00functionspeedtestupload00cKBTb": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestupload00pRAIf",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/POST/speedtest_upload",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "LambdaPermission00functionspeedtestupload00eXffF": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestupload00pRAIf",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/GET/speedtest_upload",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "LambdaPermission00functionspeedtestdownload00WqCXA": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestdownload00qSzdC",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/OPTIONS/speedtest_download",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "ApiGatewayDeployment0009ll3t00jgL4T": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGateway::Deployment",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "RestApiId": {
+                    "Ref": "ApiGatewayRestApi00f38g3qzrwj00bcKEQ"
+                }
+            }
+        },
+        "LambdaPermission00functionspeedtestdownload00fps5H": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestdownload00qSzdC",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/POST/speedtest_download",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "LambdaPermission00functionspeedtestupload00g2GNb": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::Lambda::Permission",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "FunctionName": {
+                    "Fn::GetAtt": [
+                        "LambdaFunction00speedtestupload00pRAIf",
+                        "Arn"
+                    ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "SourceArn": "arn:aws:execute-api:ca-central-1:568125114079:f38g3qzrwj/*/PUT/speedtest_upload",
+                "Principal": "apigateway.amazonaws.com"
+            }
+        },
+        "ApiGatewayRestApi00f38g3qzrwj00bcKEQ": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::ApiGateway::RestApi",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ApiKeySourceType": "HEADER",
+                "Description": "Internet Speed Test service.",
+                "EndpointConfiguration": {
+                    "Types": [
+                        "EDGE"
+                    ]
+                },
+                "DisableExecuteApiEndpoint": true,
+                "Name": "Speed Test"
+            }
+        },
+        "IAMManagedPolicy00policyserviceroleAWSLambdaBasicExecutionRole39ee0e140f1f443e9d28928add00937b00l1bQ6": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::IAM::ManagedPolicy",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "ManagedPolicyName": "AWSLambdaBasicExecutionRole-39ee0e14-0f1f-443e-9d28-928add00937b",
+                "Path": "/service-role/",
+                "Description": "",
+                "Groups": [],
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Resource": "arn:aws:logs:ca-central-1:568125114079:*",
+                            "Action": "logs:CreateLogGroup",
+                            "Effect": "Allow"
+                        },
+                        {
+                            "Resource": [
+                                "arn:aws:logs:ca-central-1:568125114079:log-group:/aws/lambda/speedtest_download:*"
+                            ],
+                            "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                            ],
+                            "Effect": "Allow"
+                        }
+                    ]
+                },
+                "Roles": [
+                    {
+                        "Ref": "IAMRole00speedtestdownloadrolenhy6ua3n00rMVx3"
+                    }
+                ],
+                "Users": []
+            }
+        },
+        "S3Bucket00pixelgladiatorcom00TOJ6O": {
+            "UpdateReplacePolicy": "Retain",
+            "Type": "AWS::S3::Bucket",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "WebsiteConfiguration": {
+                    "IndexDocument": "index.html"
+                },
+                "PublicAccessBlockConfiguration": {
+                    "RestrictPublicBuckets": false,
+                    "IgnorePublicAcls": false,
+                    "BlockPublicPolicy": false,
+                    "BlockPublicAcls": false
+                },
+                "BucketName": "pixelgladiator.com",
+                "VersioningConfiguration": {
+                    "Status": "Enabled"
+                },
+                "BucketEncryption": {
+                    "ServerSideEncryptionConfiguration": [
+                        {
+                            "BucketKeyEnabled": false,
+                            "ServerSideEncryptionByDefault": {
+                                "SSEAlgorithm": "AES256"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
