@@ -1,0 +1,51 @@
+html,body {
+	background: #000000;
+	color: #00FF00;
+	height: 100%;
+	width: 80%;
+	text-align: center;
+	font-size: 1.25em;
+}
+
+a {
+	text-decoration: none;
+}
+
+hr {
+	width: 75%;
+	color: #006900;
+}
+
+button {
+	margin: 5%;
+	font-size: 1.25em;
+}
+
+.report {
+	display: inline-block;
+}
+
+.log {
+	margin: 2%;
+	padding: 0%;
+}
+
+#log_area {
+	position: absolute;
+	top: 10%;
+	left: 50%;
+	width: 30%;
+	height: 30%;
+	display: none;
+}
+
+#test_log {
+	font-size: 0.8em;
+	background: #000000;
+	color: #DDDD00;
+	width: 100%;
+	height: 100%;
+	border: 4px groove #006900;
+	overflow: scroll;
+}
+

@@ -1,0 +1,51 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Speed Test</title>
+  <meta name="description" content="Speed Test">
+  <meta name="author" content="Aaron Morand">
+  <meta content="origin" id="mref" name="referrer">
+  <link rel="icon" href="/media/8bit_sparkling_transparent_orb.png" type="image/png">
+  
+  <link rel="stylesheet" href="default.css?v=1.0">
+  
+   </head>
+
+<body>
+  
+  <h2>Speed Test</h2>
+  
+  <button id="test_begin_button">Begin</button>
+
+  <button id="test_log_button">View Log</button>
+
+  <div>Averaged Download Speed : <div class="report" id="download_speed">0</div></div>
+  <div>Download Max Speed : <div class="report" id="download_speed_max">0</div></div>
+  <div>Download Min Speed : <div class="report" id="download_speed_min">0</div></div>
+  <div>Download Test Completion Status : <div class="report" id="download_status">0%</div></div>
+  
+  <hr>
+  
+  <div>Averaged Upload Speed : <div class="report" id="upload_speed">0</div></div>
+  <div>Upload Max Speed : <div class="report" id="upload_speed_max">0</div></div>
+  <div>Upload Min Speed : <div class="report" id="upload_speed_min">0</div></div>
+  <div>Upload Test Completion Status : <div class="report" id="upload_status">0%</div></div>
+  
+  <hr>
+  
+  <div>Status : <div class="report" id="test_status">Waiting to begin</div></div>
+
+  <div class="log" id="log_area">
+	<div>Log</div>
+	<textarea id="test_log"></textarea>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
+
+
