@@ -1,9 +1,9 @@
 let payload_size = 250000;
-const iterations = 100;
+const iteration_count = 110;
 
 let api_url = "https://api.pixelgladiator.com";
-let download_request = api_url + "/speedtest_download";
-let upload_request = api_url + "/speedtest_upload";
+let download_request_url = api_url + "/speedtest_download";
+let upload_request_url = api_url + "/speedtest_upload";
 const begin_button = document.getElementById( "test_begin_button" );
 const log_button = document.getElementById( "test_log_button" );
 const log_area = document.getElementById( "log_area" );
@@ -26,10 +26,18 @@ const e_upload_speed_max = document.getElementById( upload_speed_max );
 const e_upload_speed_min = document.getElementById( upload_speed_min );
 const e_upload_status = document.getElementById( upload_status );
 const result_status = document.getElementById( test_status );
+const DEBUG_MODE = true;
 
-begin_button.addEventListener( "click", start_test );
+begin_button.addEventListener( "click", ( event ) => {
+	start_test( iteration_count );
+} );
 
 log_button.addEventListener( "click", toggle_log );
+
+window.addEventListener( "load", ( event ) => {
+	warm_up( 10 );
+} );
+
 
 let timeout = 1000;
 
@@ -42,7 +50,16 @@ function toggle_log( ) {
 	}
 }
 
-async function start_test( ) {
+// Make sure out lambda functions are warmed up
+// so it doesn't pull down the average
+async function warm_up( iterations ) {
+	let testdata = await download_test( iterations, false );
+	if( testdata !== null ) {
+		await upload_test( testdata, iterations, false );
+	}
+}
+
+async function start_test( iterations ) {
 
 	log.textContent = "";
 	
@@ -56,129 +73,21 @@ async function start_test( ) {
 	e_upload_speed_min.textContent = 0;
 	e_upload_status.textContent = "0%";
 	
-	let testdata = await download_test( );
-	
-	await upload_test( testdata );
+	let testdata = await download_test( iterations, true );
+	if( testdata !== null ) {
+		await upload_test( testdata, iterations, true );
+	}
 	
 	result_status.textContent = "Testing Complete";
 }
 
-async function download_test( ) {
-	let speeds = [ ];
-	let total_speed = 0;
-	let average_speed = 0;
-	let rate_max = 0;
-	let rate_min = 0;
-	let skip_slow = true;
-	let skip_count = 0;
-	let skipped = 0;
-	
+async function fetch_iterations( iteration_type, request_url, request_body ) {
 	let return_data = { };
+	let time_start = 0;
+	let time_end = 0;
 	
-	const request_body = {
-		"size" : payload_size,
-	};
+	//console.log( JSON.stringify( request_body ) );
 	
-	const post_request = {
-		'method': 'POST',
-		'headers': {
-			'Content-Type': 'application/json',
-		},
-		'body': JSON.stringify( request_body ),
-	};
-
-	for( let iteration = 1; iteration <= iterations; iteration++ ) {
-		let package_size = 0;
-		result_status.textContent = "Running Download test";
-		return_data = { };
-		
-		const response = await fetch( download_request, post_request );
-		let time_start = performance.now( );
-		
-		const data = await response.json( );
-		let time_end = performance.now( );
-		if( ! data.body ) {
-			console.error( "Missing response body : " + JSON.stringify( data ) );
-			break;
-		} else {
-			if( ! data.body.data ) {
-				console.error( "Missing data : " + JSON.stringify( data.body ) );
-				break;
-			} else {
-				return_data = data.body.data;
-				package_size = return_data.length;
-			}
-		}
-		
-		// Adjusted time from msecs to secs
-		let time_elapsed = ( time_end - time_start ) / 1000;
-		
-		if( parseInt( package_size ) != payload_size ) {
-			console.log( "Download : data is " + package_size + " characters, expecting " + payload_size );
-		}
-		
-		// Data in bits
-		let received_length = package_size * 8;
-		// bits per second
-		let speed = ( received_length / time_elapsed ) / 1000000;
-		speeds.push( speed );
-		
-		if( rate_min == 0 ) {
-			rate_min = speed;
-		}
-		
-		total_speed = 0;
-		let max_sample = iterations - skipped;
-		if( iteration < max_sample ) {
-			max_sample = iteration - skipped;
-		}
-		
-		if( max_sample > 0 ) {
-			if( speed > rate_max ) {
-				rate_max = speed;
-			} else if ( speed < rate_min ) {
-				rate_min = speed;
-			}
-
-			for( let index = 4; index < max_sample; index++ ) {
-				total_speed += speeds[ index ];
-			}
-			average_speed = total_speed / max_sample;
-		}
-
-		log.textContent = log.textContent + "\n" + iteration + ") " + speed.toFixed( 2 ) + " Mbps Download Average : " + average_speed.toFixed( 2 ) + " Mbps";
-		log.scrollTop = log.scrollHeight;
-		e_download_speed.textContent = average_speed.toFixed( 2 ) + " Mbps";
-		e_download_speed_max.textContent = rate_max.toFixed( 2 ) + " Mbps";
-		e_download_speed_min.textContent = rate_min.toFixed( 2 ) + " Mbps";
-		
-		e_download_status.textContent = ( ( ( iteration - skipped ) / ( iterations - skipped ) ) * 100 ).toFixed( 1 ) + "%";
-	}
-	return return_data;
-}
-
-async function upload_test( data ) {
-	result_status.textContent = "Running Upload test";
-
-	let speeds = [ ];
-	let total_speed = 0;
-	let average_speed = 0;
-	let rate_max = 0;
-	let rate_min = 0;
-	let message = undefined;
-	let skip_slow = false;
-	let skip_count = 0;
-	let skipped = 0;
-	
-	if( parseInt( data.length ) != payload_size ) {
-		console.log( "Upload : data is " + data.length + " characters, expecting " + payload_size );
-	}
-	
-	let request_body = {
-		"size" : payload_size,
-		"data" : data
-	};
-
 	let post_request = {
 		'method': 'POST',
 		'headers': {
@@ -186,54 +95,185 @@ async function upload_test( data ) {
 		},
 		'body': JSON.stringify( request_body ),
 	};
+	if( iteration_type == 'Upload' ) {
+		time_start = performance.now( );
+	}
+	// Make the request
+	const response = await fetch( request_url, post_request );
+	if( iteration_type == 'Download' ) {
+		time_start = performance.now( );
+	} else {
+		time_end = performance.now( );
+	}
+	// Get the response
+	const data = await response.json( );
+	if( iteration_type == 'Download' ) {
+		time_end = performance.now( );
+	}
 	
-	for( let iteration = 1; iteration <= iterations; iteration++ ) {
-		
-		let time_start = performance.now( );
-		let response = await fetch( upload_request, post_request );
-		let time_end = performance.now( );
-		
-		let return_data = await response.json( );
-		
+	if( ! data.body ) {
+		console.error( "Missing response body : " + JSON.stringify( data ) );
+	} else {
+		if( ! data.body.data ) {
+			console.error( "Missing data : " + JSON.stringify( data.body.message ) );
+		} else {
+			return_data[ 'data' ] = data.body.data;
+			return_data[ 'package_size' ] = return_data[ 'data' ].length;
+		}
+	}
+
+	if( 'data' in return_data && 'package_size' in return_data ) {
 		// Adjusted time from msecs to secs
 		let time_elapsed = ( time_end - time_start ) / 1000;
 		
-		// Data in bits
-		let received_length = data.length * 8;
-		// Mbits per second
-		let speed = ( received_length / time_elapsed ) / 1000000;
-		speeds.push( speed );
-
-		if( rate_min == 0 ) {
-			rate_min = speed;
-		}
-		
-		total_speed = 0;
-		let max_sample = iterations - skipped;
-		if( iteration < max_sample ) {
-			max_sample = iteration - skipped;
-		}
-
-		if( max_sample > 0 ) {
-			if( speed > rate_max ) {
-				rate_max = speed;
-			} else if ( speed < rate_min ) {
-				rate_min = speed;
+		if( return_data[ 'package_size' ] != payload_size ) {
+			console.error( iteration_type + " data is " + return_data[ 'package_size' ] + " characters, expecting " + payload_size );
+		} else {
+			// Data in bits
+			let received_length = return_data[ 'package_size' ] * 8;
+			// bits per second
+			return_data[ 'speed' ] = ( received_length / time_elapsed ) / 1000000;
+			if( DEBUG_MODE ) {
+				console.log( "Speed Calculation : " + received_length + " / " + time_elapsed + " / " + 1000000 + " = " + return_data[ 'speed' ] );
 			}
-		
-			for( let index = 4; index < max_sample; index++ ) {
-				total_speed += speeds[ index ];
-			}
-			average_speed = total_speed / max_sample;
+		}
+	}
+	
+	return return_data;
+}
+
+async function process_data( iteration_type,
+							 iteration,
+							 iterations,
+							 speed_data,
+							 e_speed,
+							 e_speed_max,
+							 e_speed_min,
+							 e_status,
+							 do_logging ) {
+	let total_speed = 0;
+	let average_speed = 0;
+	let skipped = 10;
+	
+	let max_sample = iterations - skipped;
+	if( iteration < max_sample ) {
+		max_sample = iteration - skipped;
+	}
+	
+	if( max_sample > 0 ) {
+		if( speed_data[ 'rate_min' ] == 0 ) {
+			speed_data[ 'rate_min' ] = speed_data[ 'speed' ];
 		}
 		
-		log.textContent = log.textContent + "\n" + iteration + ") " + speed.toFixed( 2 ) + " Mbps Upload Average : " + average_speed.toFixed( 2 ) + " Mbps";
-		log.scrollTop = log.scrollHeight;
-		e_upload_speed.textContent = average_speed.toFixed( 2 ) + " Mbps";
-		e_upload_speed_max.textContent = rate_max.toFixed( 2 ) + " Mbps";
-		e_upload_speed_min.textContent = rate_min.toFixed( 2 ) + " Mbps";
+		speed_data[ 'speeds' ].push( speed_data[ 'speed' ] );
+		if( speed_data[ 'speed' ] > speed_data[ 'rate_max' ] ) {
+			speed_data[ 'rate_max' ] = speed_data[ 'speed' ];
+		} else if ( speed_data[ 'speed' ] < speed_data[ 'rate_min' ] ) {
+			speed_data[ 'rate_min' ] = speed_data[ 'speed' ];
+		}
 		
-		e_upload_status.textContent = ( ( ( iteration - skipped ) / ( iterations - skipped ) ) * 100 ).toFixed( 1 ) + "%";
+		for( let index = 0; index < speed_data[ 'speeds' ].length; index++ ) {
+			total_speed += speed_data[ 'speeds' ][ index ];
+		}
+		average_speed = total_speed / max_sample;
+		
+		if( do_logging ) {
+			log.textContent = log.textContent + "\n" + ( iteration - skipped ) + ") " + speed_data[ 'speed' ].toFixed( 2 ) + " Mbps " + iteration_type + " Average : " + average_speed.toFixed( 2 ) + " Mbps";
+			log.scrollTop = log.scrollHeight;
+			e_speed.textContent = average_speed.toFixed( 2 ) + " Mbps";
+			e_speed_max.textContent = speed_data[ 'rate_max' ].toFixed( 2 ) + " Mbps";
+			e_speed_min.textContent = speed_data[ 'rate_min' ].toFixed( 2 ) + " Mbps";
+			
+			e_status.textContent = ( ( ( iteration - skipped ) / ( iterations - skipped ) ) * 100 ).toFixed( 1 ) + "%";
+		}
+	}
+	
+	return speed_data;
+}
+
+async function download_test( iterations, do_logging ) {
+	if( do_logging ) {
+		result_status.textContent = 'Running Download test';
+	}
+	let iteration_type = 'Download';
+	let speed_data = {
+		'speeds' : [ ],
+		'rate_min' : 0,
+		'rate_max' : 0,
+		'speed' : 0
+	};
+	let return_data = { };
+	let return_data_block = null;
+	
+	const request_body = {
+		'size' : payload_size,
+	};
+	
+	for( let iteration = 1; iteration <= iterations; iteration++ ) {
+		let package_size = 0;
+		return_data = await fetch_iterations( iteration_type, download_request_url, request_body );
+		
+		if( 'data' in return_data === false ) {
+			console.error( 'Request did not return data.' );
+		} else {
+			if( return_data_block === null ) {
+				return_data_block = return_data[ 'data' ];
+			}
+			speed_data[ 'speed' ] = return_data[ 'speed' ];
+			speed_data = await process_data( iteration_type,
+											 iteration,
+											 iterations,
+											 speed_data,
+											 e_download_speed,
+											 e_download_speed_max,
+											 e_download_speed_min,
+											 e_download_status,
+											 do_logging );
+		}
+	}
+	return return_data_block;
+}
+
+async function upload_test( data, iterations, do_logging ) {
+	if( do_logging ) {
+		result_status.textContent = 'Running Upload test';
+	}
+
+	let iteration_type = 'Upload';
+	let speed_data = {
+		'speeds' : [ ],
+		'rate_min' : 0,
+		'rate_max' : 0,
+		'speed' : 0
+	};
+	let skipped = 10;
+	
+	if( parseInt( data.length ) != payload_size ) {
+		console.error( "Upload : data is " + data.length + " characters, expecting " + payload_size );
+	}
+	
+	const request_body = {
+		'size' : payload_size,
+		'data' : data
+	};
+	
+	for( let iteration = 1; iteration <= iterations; iteration++ ) {
+		let return_data = await fetch_iterations( iteration_type, upload_request_url, request_body );
+
+		if( 'speed' in return_data === false ) {
+			console.error( 'Request did not return data.' );
+		} else {
+			speed_data[ 'speed' ] = return_data[ 'speed' ];
+			speed_data = await process_data( iteration_type,
+											 iteration,
+											 iterations,
+											 speed_data,
+											 e_upload_speed,
+											 e_upload_speed_max,
+											 e_upload_speed_min,
+											 e_upload_status,
+											 do_logging );
+		}
     }
 }
 

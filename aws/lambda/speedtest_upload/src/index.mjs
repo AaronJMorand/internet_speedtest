@@ -9,33 +9,32 @@ export const handler = async ( event, context ) => {
     }
   };
   
-  if( event.body ) {
-    const body_info = JSON.parse( event.body );
+  if( event ) {
     
-    if( body_info.size ) {
-      if( parseInt( body_info.size ) < parseInt( process.env.size_min ) ) {
+    if( event.size ) {
+      if( parseInt( event.size ) < parseInt( process.env.size_min ) ) {
         test_size = process.env.size_min;
         
-      } else if( parseInt( body_info.size ) > parseInt( process.env.size_max ) ) {
+      } else if( parseInt( event.size ) > parseInt( process.env.size_max ) ) {
         test_size = process.env.size_max;
 
       } else {
-        test_size = body_info.size;
+        test_size = event.size;
       }
     }
     
-    if( body_info.data ) {
-      if( body_info.data.length == test_size ) {
+    if( event.data ) {
+      if( event.data.length == test_size ) {
         response = {
           statusCode: 200,
-          body: { "message" : "Test Complete" }
+          body: { "message" : "Test Complete", "data" : event.data }
         };
         
       } else {
-        console.log( "Event data has length of " + body_info.data.length + " while expecting " + test_size );
+        console.log( "Event data has length of " + event.data.length + " while expecting " + test_size );
         response = {
           statusCode: 400,
-          body: { "message" : "Invalid Data Size - got " + body_info.data.length + " while expecting " + test_size }
+          body: { "message" : "Invalid Data Size - got " + event.data.length + " while expecting " + test_size }
         };
       }
       
@@ -44,9 +43,10 @@ export const handler = async ( event, context ) => {
     }
     
   } else {
-    console.log( "No event body." );
+    console.log( "No event." );
   }
   
   console.log( "Responding with : " + response.statusCode );
   return response;
 };
+
