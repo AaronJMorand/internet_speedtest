@@ -26,7 +26,7 @@ const e_upload_speed_max = document.getElementById( upload_speed_max );
 const e_upload_speed_min = document.getElementById( upload_speed_min );
 const e_upload_status = document.getElementById( upload_status );
 const result_status = document.getElementById( test_status );
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 begin_button.addEventListener( "click", ( event ) => {
 	start_test( iteration_count );
